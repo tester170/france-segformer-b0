@@ -13,6 +13,9 @@ import os
 import sys
 
 os.environ['MPLBACKEND'] = 'Agg'   # notebook kernels export an inline backend unknown to this environment
+import warnings  # noqa: E402
+
+warnings.filterwarnings('ignore', category=UserWarning)   # mmseg deprecation notices at model building
 import time
 from pathlib import Path
 
