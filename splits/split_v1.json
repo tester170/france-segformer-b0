@@ -1,0 +1,198 @@
+{
+ "note": "Split by whole fragments: 12 training and 4 validation fragments (25 % of the pixels, every class 11-35 %). Train IDs 0..13 = CoSIA ids 0-5, 7-14; CoSIA 6 (snow), 15 (clear-cut), 16 (other) do not occur in the data; 255 = ignore.",
+ "classes": [
+  {
+   "train_id": 0,
+   "cosia_id": 0,
+   "name_en": "building",
+   "name_fr": "Bâtiment",
+   "name_ru": "Здание",
+   "color": [
+    206,
+    112,
+    121
+   ]
+  },
+  {
+   "train_id": 1,
+   "cosia_id": 1,
+   "name_en": "permeable surface",
+   "name_fr": "Zone perméable",
+   "name_ru": "Проницаемое покрытие",
+   "color": [
+    152,
+    119,
+    82
+   ]
+  },
+  {
+   "train_id": 2,
+   "cosia_id": 2,
+   "name_en": "impervious surface",
+   "name_fr": "Zone imperméable",
+   "name_ru": "Непроницаемое покрытие",
+   "color": [
+    166,
+    170,
+    183
+   ]
+  },
+  {
+   "train_id": 3,
+   "cosia_id": 3,
+   "name_en": "swimming pool",
+   "name_fr": "Piscine",
+   "name_ru": "Бассейн",
+   "color": [
+    98,
+    208,
+    255
+   ]
+  },
+  {
+   "train_id": 4,
+   "cosia_id": 4,
+   "name_en": "bare soil",
+   "name_fr": "Sol nu",
+   "name_ru": "Голый грунт",
+   "color": [
+    187,
+    176,
+    150
+   ]
+  },
+  {
+   "train_id": 5,
+   "cosia_id": 5,
+   "name_en": "water",
+   "name_fr": "Surface eau",
+   "name_ru": "Вода",
+   "color": [
+    51,
+    117,
+    161
+   ]
+  },
+  {
+   "train_id": 6,
+   "cosia_id": 7,
+   "name_en": "coniferous",
+   "name_fr": "Conifère",
+   "name_ru": "Хвойные деревья",
+   "color": [
+    18,
+    100,
+    33
+   ]
+  },
+  {
+   "train_id": 7,
+   "cosia_id": 8,
+   "name_en": "deciduous",
+   "name_fr": "Feuillu",
+   "name_ru": "Лиственные деревья",
+   "color": [
+    76,
+    145,
+    41
+   ]
+  },
+  {
+   "train_id": 8,
+   "cosia_id": 9,
+   "name_en": "brushwood",
+   "name_fr": "Broussaille",
+   "name_ru": "Кустарник",
+   "color": [
+    181,
+    195,
+    53
+   ]
+  },
+  {
+   "train_id": 9,
+   "cosia_id": 10,
+   "name_en": "vineyard",
+   "name_fr": "Vigne",
+   "name_ru": "Виноградник",
+   "color": [
+    176,
+    130,
+    144
+   ]
+  },
+  {
+   "train_id": 10,
+   "cosia_id": 11,
+   "name_en": "herbaceous",
+   "name_fr": "Pelouse",
+   "name_ru": "Газон, луг",
+   "color": [
+    140,
+    215,
+    106
+   ]
+  },
+  {
+   "train_id": 11,
+   "cosia_id": 12,
+   "name_en": "agricultural",
+   "name_fr": "Culture",
+   "name_ru": "Посевы",
+   "color": [
+    222,
+    207,
+    85
+   ]
+  },
+  {
+   "train_id": 12,
+   "cosia_id": 13,
+   "name_en": "plowed land",
+   "name_fr": "Terre labourée",
+   "name_ru": "Пашня",
+   "color": [
+    208,
+    163,
+    73
+   ]
+  },
+  {
+   "train_id": 13,
+   "cosia_id": 14,
+   "name_en": "greenhouse",
+   "name_fr": "Serre",
+   "name_ru": "Теплица",
+   "color": [
+    185,
+    226,
+    212
+   ]
+  }
+ ],
+ "absent_cosia_ids": {
+  "6": "Neige",
+  "15": "Coupe",
+  "16": "Autre"
+ },
+ "train": [
+  "City/fragment_WGS84_11197x9308_z19_48.60012_2.57135.tif",
+  "City/fragment_WGS84_12547x9562_z19_48.91960_2.36917.tif",
+  "City/fragment_WGS84_12869x8962_z19_48.40668_-4.50936.tif",
+  "City/fragment_WGS84_12890x9909_z19_48.00846_-4.10280.tif",
+  "Other/fragment_WGS84_12434x9567_z19_43.92760_4.35103.tif",
+  "Other/fragment_WGS84_12716x9358_z19_43.98132_3.90382.tif",
+  "Other/fragment_WGS84_12928x9027_z19_44.01418_6.23551.tif",
+  "Village/fragment_WGS84_12565x9636_z19_47.96009_-3.53635.tif",
+  "Village/fragment_WGS84_12584x9770_z19_47.85531_-3.46719.tif",
+  "Village/fragment_WGS84_12634x9423_z19_47.90286_-3.57845.tif",
+  "Village/fragment_WGS84_12819x9743_z19_44.81739_-0.14032.tif",
+  "Village/fragment_WGS84_12870x9409_z19_44.94259_-0.49600.tif"
+ ],
+ "val": [
+  "City/fragment_WGS84_12832x9581_z19_48.95591_2.90781.tif",
+  "Other/fragment_WGS84_12604x9188_z19_43.94007_4.44547.tif",
+  "Village/fragment_WGS84_12646x9236_z19_44.99545_-0.19707.tif",
+  "Village/fragment_WGS84_13665x9151_z19_45.02633_0.06541.tif"
+ ]
+}

@@ -1,0 +1,7 @@
+checkpoints/
+wheels/
+__pycache__/
+*.part
+data/
+work_dirs/
+.uv/

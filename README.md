@@ -1,0 +1,57 @@
+# SegFormer-B0 для набора France, разметка IGN CoSIA (MMSegmentation 1.2.2)
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tester170/france-segformer-b0/blob/v1.0/France_SegFormer_B0.ipynb)
+
+Семантическая сегментация ортофотоснимков Франции (около 0,2 м на пиксель) по 14 классам покрытия земли палитры IGN CoSIA моделью SegFormer-B0 в MMSegmentation 1.2.2: обученная модель, конфигурации MMSegmentation, подготовка данных, точное окружение и блокнот Colab для оценки, распознавания своих снимков и дообучения.
+
+## Запуск в Colab
+1. Откройте блокнот кнопкой «Open in Colab» выше.
+2. *Среда выполнения → Сменить среду выполнения → GPU*.
+3. *Среда выполнения → Выполнить все*.
+
+Блокнот сам клонирует репозиторий, ставит окружение эксперимента (Python 3.11, PyTorch 2.1.0 + CUDA 12.1, MMCV 2.1.0, MMEngine 0.10.7, MMSegmentation 1.2.2) отдельно от окружения Colab, скачивает модель из релиза `v1.0` и набор France с Яндекс Диска, проверяет модель штатным `tools/test.py` и показывает результат. Свои снимки для распознавания положите в `/content/my_images`, дообучение включается параметром `TRAIN` в разделе 1.
+
+## Без блокнота (Linux, GPU NVIDIA желательна)
+```bash
+git clone --branch v1.0 https://github.com/tester170/france-segformer-b0.git && cd france-segformer-b0
+bash env/setup_env.sh ~/py311                                   # окружение Python 3.11 эксперимента
+python3 scripts/fetch.py model                                  # веса модели из релиза -> checkpoints/
+python3 scripts/fetch.py dataset --out data/France              # набор France с Яндекс Диска (5,4 ГБ)
+~/py311/bin/python scripts/prepare_data.py --src data/France --out data/france
+PYTHONPATH=. ~/py311/bin/python tools/test.py configs/france/segformer_mit-b0_1xb8-amp_france-1024x1024.py \
+    checkpoints/segformer_b0_france_ep76.pth --work-dir work_dirs/test          # mIoU 72,90 %
+~/py311/bin/python scripts/infer.py --input <снимок или папка> --out <папка> --overlay
+```
+Обучение с нуля, как в эксперименте:
+```bash
+python3 scripts/fetch.py init                                   # кодировщик MiT-B0, предобученный на LoveDA
+PYTHONPATH=. ~/py311/bin/python tools/train.py configs/france/segformer_mit-b0_1xb8-amp_france-1024x1024.py \
+    --work-dir work_dirs/segformer_b0_france
+```
+Подробнее о конфигурации — `configs/france/README_RU.md`. `tools/train.py` и `tools/test.py` — штатные скрипты MMSegmentation v1.2.2 без изменений.
+
+## Набор данных
+16 фрагментов ортофотоснимков (RGB GeoTIFF, около 12 600 × 9 400 пикселей, 0,2 м) с разметкой IGN CoSIA в трёх поднаборах: City (5 фрагментов), Village (7) и Other (4), всего 1,9 млрд пикселей. Набор лежит в публичной папке Яндекс Диска https://disk.yandex.ru/d/k1HfK1f8eh27Yw. `scripts/fetch.py dataset` скачивает его по прямым ссылкам без учётной записи и сверяет каждый файл с контрольной суммой SHA-256 из `env/assets.json`.
+
+Обучение и проверка разделены по целым фрагментам (`splits/split_v1.json`): 12 обучающих и 4 валидационных (один из City, два из Village, один из Other, 25 % пикселей). Из 17 классов CoSIA в данных встречаются 14: снега, вырубки и класса «прочее» нет.
+
+Разметка CoSIA создана нейросетевой сегментацией IGN, а не вручную, поэтому метрики показывают согласие модели с CoSIA.
+
+## Файлы релиза `v1.0`
+| Файл | Назначение |
+|---|---|
+| `segformer_b0_france_ep76.pth` | обученная модель (чекпойнт MMSegmentation 1.2.2, эпоха 76) |
+| `mit_b0_loveda_encoder.pth` | кодировщик MiT-B0, предобученный на LoveDA: начальные веса для обучения |
+| `mmcv-2.1.0-cp311-cp311-manylinux1_x86_64.whl` | официальная сборка MMCV 2.1.0 OpenMMLab для torch 2.1 / CUDA 12.1 |
+| `mmcv-2.1.0-cp311-cp311-win_amd64.whl` | сборка MMCV 2.1.0 с CUDA-операциями для Windows (torch 2.1 / CUDA 12.1) |
+
+Контрольные суммы — в `env/assets.json`, `scripts/fetch.py` проверяет каждый скачанный файл.
+
+## Модель
+SegFormer-B0 (кодировщик MiT-B0 и MLP-декодер), 3,7 млн параметров, 14 классов, патчи 1024 × 1024, лучшая эпоха 76 из 100. Валидационные фрагменты: mIoU 72,9 %, F1 83,6 %, общая точность 88,6 %, κ = 0,860. По поднаборам общая точность 90,3 % (City), 87,9 % (Village) и 88,2 % (Other). Подробнее — `MODEL_CARD_RU.md`.
+
+## Данные и лицензии
+Классификация и разметка CoSIA (Couverture du Sol par Intelligence Artificielle) и ортофотоснимки подготовлены национальным институтом географической и лесной информации Франции (IGN) и распространяются им по открытой лицензии Etalab 2.0. Кодировщик предобучен на наборе LoveDA (J. Wang et al., *LoveDA: A Remote Sensing Land-Cover Dataset for Domain Adaptive Semantic Segmentation*, NeurIPS 2021). Модель SegFormer: E. Xie et al., *SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers*, NeurIPS 2021.
+
+## Состав
+`configs/france/` конфигурации MMSegmentation · `france_mmseg/` модули проекта (потоковый скользящий инференс, повороты и отражения, управление скоростью обучения) · `tools/` штатные `train.py` и `test.py` MMSegmentation · `scripts/` загрузка файлов (`fetch.py`), подготовка набора, распознавание своих снимков · `env/` установка и проверка окружения, файлы релиза (`assets.json`) · `splits/` разбиение и таблица классов · `France_SegFormer_B0.ipynb` блокнот Colab.

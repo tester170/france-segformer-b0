@@ -1,0 +1,197 @@
+{
+ "repo": "tester170/france-segformer-b0",
+ "tag": "v1.0",
+ "release": {
+  "model": {
+   "name": "segformer_b0_france_ep76.pth",
+   "dir": "checkpoints",
+   "size": 14961078,
+   "sha256": "fb2877afba7f6ec3561798d4248430e544a270abe8efceda76572715443739f4"
+  },
+  "init": {
+   "name": "mit_b0_loveda_encoder.pth",
+   "dir": "checkpoints",
+   "size": 13333226,
+   "sha256": "feef304053335d65c3663c465bff0f367a15b6fdb1a34bd3973a3683f2ae738a"
+  },
+  "mmcv": {
+   "name": "mmcv-2.1.0-cp311-cp311-manylinux1_x86_64.whl",
+   "dir": "wheels",
+   "size": 323304127,
+   "sha256": "1f973d965e3190072cb289d75879c0e02efd6b251aca66a3055acc56ef078b9c"
+  },
+  "mmcv_windows": {
+   "name": "mmcv-2.1.0-cp311-cp311-win_amd64.whl",
+   "dir": "wheels",
+   "size": 29213324,
+   "sha256": "fc8eeb0095bc1855e37a2db4e30ce9eab429470892c6b4947141b86264b0591f"
+  }
+ },
+ "mmcv_official": "https://download.openmmlab.com/mmcv/dist/cu121/torch2.1.0/mmcv-2.1.0-cp311-cp311-manylinux1_x86_64.whl",
+ "dataset": {
+  "public_url": "https://disk.yandex.ru/d/k1HfK1f8eh27Yw",
+  "note": "orthophoto fragments (RGB GeoTIFF) and IGN CoSIA labels (*_indexed.tif)",
+  "files": [
+   {
+    "path": "/City/fragment_WGS84_11197x9308_z19_48.60012_2.57135.tif",
+    "size": 312665892,
+    "sha256": "37f0dc64e34266a2b09d27c656dd14ca70cc47386f79c258b017eb2514f9ccce"
+   },
+   {
+    "path": "/City/fragment_WGS84_11197x9308_z19_48.60012_2.57135_indexed.tif",
+    "size": 4266754,
+    "sha256": "690bf3ebe803a3f7b269570567445c99302409414ddee85f9be7b3b1ad373536"
+   },
+   {
+    "path": "/City/fragment_WGS84_12547x9562_z19_48.91960_2.36917.tif",
+    "size": 359924106,
+    "sha256": "15b9235cd77784ad4ea8767d667ae9e89ea2e594b8e9a31212fda8e464a8472f"
+   },
+   {
+    "path": "/City/fragment_WGS84_12547x9562_z19_48.91960_2.36917_indexed.tif",
+    "size": 4561968,
+    "sha256": "aea8627c92343bc076a9f831cef37f598f56ec9351883744c65f789568aa1af4"
+   },
+   {
+    "path": "/City/fragment_WGS84_12832x9581_z19_48.95591_2.90781.tif",
+    "size": 368831040,
+    "sha256": "274fce92023b2938e6b78aa125c077d0adab7a255108bbe4e3cb158b925d1338"
+   },
+   {
+    "path": "/City/fragment_WGS84_12832x9581_z19_48.95591_2.90781_indexed.tif",
+    "size": 5194366,
+    "sha256": "363d701ce7d7f054ffba8c2642e59ce9d34d7f86e2db9f187f0fc9e0682f2b75"
+   },
+   {
+    "path": "/City/fragment_WGS84_12869x8962_z19_48.40668_-4.50936.tif",
+    "size": 345996798,
+    "sha256": "0f363348c75c7b374b9ecda2ce4a3eab39642b7520b5bb1cf0148f319f7ad1ec"
+   },
+   {
+    "path": "/City/fragment_WGS84_12869x8962_z19_48.40668_-4.50936_indexed.tif",
+    "size": 4505062,
+    "sha256": "381b9e8208f69ef6667fd88e4f7421916feaccecdbfa11fed89be818bd6719fa"
+   },
+   {
+    "path": "/City/fragment_WGS84_12890x9909_z19_48.00846_-4.10280.tif",
+    "size": 383181894,
+    "sha256": "a061b16c93e4163ad959d97432a0021298bc1b1afc070bee5c66bec8468b867d"
+   },
+   {
+    "path": "/City/fragment_WGS84_12890x9909_z19_48.00846_-4.10280_indexed.tif",
+    "size": 5502980,
+    "sha256": "639f9cbeef0112e69c7d8cdae4739a146589f602daeb70413730a8a14e7ae136"
+   },
+   {
+    "path": "/Other/fragment_WGS84_12434x9567_z19_43.92760_4.35103.tif",
+    "size": 356869098,
+    "sha256": "c407a980513d6fca2b26159e3a0f078694464b15cb9e21ee66c39c17b9391e94"
+   },
+   {
+    "path": "/Other/fragment_WGS84_12434x9567_z19_43.92760_4.35103_indexed.tif",
+    "size": 3374558,
+    "sha256": "2c943291d9b97e1ea4d8f53209c7f8f13d7823ec2f1441a9dbd74b9b0e60c4e4"
+   },
+   {
+    "path": "/Other/fragment_WGS84_12604x9188_z19_43.94007_4.44547.tif",
+    "size": 347417520,
+    "sha256": "b226890dc2c462db06b34935f2c418fd4e4fc3e279d2f9fb4814879ebd583684"
+   },
+   {
+    "path": "/Other/fragment_WGS84_12604x9188_z19_43.94007_4.44547_indexed.tif",
+    "size": 3189292,
+    "sha256": "2709b775a37f95710c17c69cedf5007351df33bb1ef3faaf625ad24a782794a3"
+   },
+   {
+    "path": "/Other/fragment_WGS84_12716x9358_z19_43.98132_3.90382.tif",
+    "size": 356989848,
+    "sha256": "f87b3d5fce2b5fa332cbb3b8e1ef9ea7b555f572885bc8bca124f47f3349e370"
+   },
+   {
+    "path": "/Other/fragment_WGS84_12716x9358_z19_43.98132_3.90382_indexed.tif",
+    "size": 4117184,
+    "sha256": "a694cd9f2f2f290fc1d8c12df8e0bb28d0c60f9162a429b2f7b2a727592841cf"
+   },
+   {
+    "path": "/Other/fragment_WGS84_12928x9027_z19_44.01418_6.23551.tif",
+    "size": 350104032,
+    "sha256": "35bbb19ff57e934cc0813cef181a5b8d7a4e1ce769c5f3a9d010e519600f43d8"
+   },
+   {
+    "path": "/Other/fragment_WGS84_12928x9027_z19_44.01418_6.23551_indexed.tif",
+    "size": 4177258,
+    "sha256": "98aba4905cc68e26f3a90358021b117c2055e7645943e24679cb5e506efe7799"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12565x9636_z19_47.96009_-3.53635.tif",
+    "size": 363229884,
+    "sha256": "2043fef76e90450bc611c6695775dae3cb85ab56f9b03181a27308be04dcaa65"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12565x9636_z19_47.96009_-3.53635_indexed.tif",
+    "size": 2956148,
+    "sha256": "d575b1857e5f549d6e66034737d80ccf838f8cd783743fddbed50547641a5e3f"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12584x9770_z19_47.85531_-3.46719.tif",
+    "size": 368837904,
+    "sha256": "13bc056361aa8293be8d79b6ad6213034a6d5db0b4e7fffeec4cf9a4dd82fa48"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12584x9770_z19_47.85531_-3.46719_indexed.tif",
+    "size": 2927414,
+    "sha256": "0347eb217f8a13fb9c003066f3fc54c402bf510e7688721d44905dc0270d59b9"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12634x9423_z19_47.90286_-3.57845.tif",
+    "size": 357151410,
+    "sha256": "404c07239327c482534b0b857fb99ad3cfe54f20f650fb237f744f74af108e3d"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12634x9423_z19_47.90286_-3.57845_indexed.tif",
+    "size": 3204334,
+    "sha256": "d982198cdd81b163ff0b78ed085e7370c7a38e70b55b5c8f5b73fa163c4d8352"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12646x9236_z19_44.99545_-0.19707.tif",
+    "size": 350396232,
+    "sha256": "6946a641727009ec0192728d0f99f8393989ef9ba9cf4f67025480024095b05d"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12646x9236_z19_44.99545_-0.19707_indexed.tif",
+    "size": 4022152,
+    "sha256": "04434e9c143d1cbf3f74a0736ab162430a202bd57fc42166686a4e71e2611be8"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12819x9743_z19_44.81739_-0.14032.tif",
+    "size": 374687415,
+    "sha256": "97e31398a975188ea8f0f9dceb5b10934a80263e6b967f528bf4bee5634e9d36"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12819x9743_z19_44.81739_-0.14032_indexed.tif",
+    "size": 3144822,
+    "sha256": "950182f95b6db13882a9e687d462ce4e9f996b04c1e99aea012e23f184ada4d1"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12870x9409_z19_44.94259_-0.49600.tif",
+    "size": 363282354,
+    "sha256": "b2b02b1141117ccafdc53715461e4125910d6aa36f423fa8d8df8e04232a97c4"
+   },
+   {
+    "path": "/Village/fragment_WGS84_12870x9409_z19_44.94259_-0.49600_indexed.tif",
+    "size": 5887592,
+    "sha256": "14aa2d22ce31b09621f08f14b97b4e5140c3bb737c94e3f7e1cdda9699418f2e"
+   },
+   {
+    "path": "/Village/fragment_WGS84_13665x9151_z19_45.02633_0.06541.tif",
+    "size": 375146109,
+    "sha256": "c0b070fe25daff93e47e1c0f26e379ef13168f5bc36af4d35d93a28922511b95"
+   },
+   {
+    "path": "/Village/fragment_WGS84_13665x9151_z19_45.02633_0.06541_indexed.tif",
+    "size": 3155418,
+    "sha256": "2b4a454e405c4c79462b97bad223efd9f0f79e6f3ca16a2f2692411a428982bb"
+   }
+  ]
+ }
+}
