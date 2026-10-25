@@ -4,10 +4,15 @@ RGB 8 bit, ~0.2 m per pixel for best results. For every input it writes
   <name>_cosia.tif|png   class mask with CoSIA codes (0-5, 7-14) and the CoSIA colour table; GeoTIFF with the source
                          georeferencing when the input has one, else PNG
   <name>_color.png       colour mask (CoSIA palette), and with --overlay a half-transparent overlay on the image
-Usage: python scripts/infer.py --input <file or folder> --out <folder> [--checkpoint ...] [--fp16] [--overlay]"""
+  <name>_preview.jpg     image and colour mask side by side, reduced to 1600 px width (for a quick look)
+Usage: python scripts/infer.py --input <file or folder> --out <folder> [--checkpoint ...] [--bands 1 2 3] [--fp16]
+       [--overlay]"""
 import argparse
 import json
+import os
 import sys
+
+os.environ['MPLBACKEND'] = 'Agg'   # notebook kernels export an inline backend unknown to this environment
 import time
 from pathlib import Path
 
@@ -29,6 +34,7 @@ def main():
     ap.add_argument('--checkpoint', default=str(BUNDLE / 'checkpoints/segformer_b0_france_ep76.pth'))
     ap.add_argument('--fp16', action='store_true', help='half-precision inference (GPU only)')
     ap.add_argument('--overlay', action='store_true')
+    ap.add_argument('--bands', nargs=3, type=int, default=[1, 2, 3], help='band numbers of R G B (default 1 2 3)')
     a = ap.parse_args()
 
     import cv2
@@ -56,8 +62,8 @@ def main():
     for f in files:
         t0 = time.time()
         with rasterio.open(f) as ds:
-            assert ds.count >= 3, f'{f}: an RGB raster is expected'
-            rgb = ds.read([1, 2, 3])                       # 3 x H x W
+            assert ds.count >= max(a.bands), f'{f}: {ds.count} band(s), bands {a.bands} requested'
+            rgb = ds.read(a.bands)                         # 3 x H x W
             profile, georef = ds.profile, ds.crs is not None
         assert rgb.dtype == np.uint8, f'{f}: 8-bit RGB is expected, got {rgb.dtype}'
         x = (torch.from_numpy(rgb).to(dev)[None].float() - mean) / std
@@ -79,6 +85,12 @@ def main():
             cv2.imwrite(str(p), codes)
         color = palette[pred]
         cv2.imwrite(str(out / f'{f.stem}_color.png'), color[..., ::-1])
+        k = min(1.0, 800 / pred.shape[1])                   # preview: image | mask, 1600 px wide
+        size = (max(1, round(pred.shape[1] * k)), max(1, round(pred.shape[0] * k)))
+        img_s = cv2.resize(np.transpose(rgb, (1, 2, 0)), size, interpolation=cv2.INTER_AREA)
+        col_s = cv2.resize(color, size, interpolation=cv2.INTER_NEAREST)
+        cv2.imwrite(str(out / f'{f.stem}_preview.jpg'), np.concatenate([img_s, col_s], 1)[..., ::-1],
+                    [cv2.IMWRITE_JPEG_QUALITY, 90])
         if a.overlay:
             img = np.transpose(rgb, (1, 2, 0))
             blend = (0.55 * img + 0.45 * color).astype(np.uint8)
