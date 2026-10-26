@@ -41,13 +41,20 @@ PYTHONPATH=. ~/py311/bin/python tools/test.py configs/france/segformer_mit-b0_1x
     checkpoints/segformer_b0_france_ep76.pth --work-dir work_dirs/test          # mIoU 72,90 %
 ~/py311/bin/python scripts/infer.py --input <снимок или папка> --out <папка> --overlay
 ```
-Обучение с нуля, как в эксперименте:
+Вторая модель, DINOv3 ConvNeXt-B + UPerNet (mIoU 75,30 %), оценивается той же командой со своей конфигурацией:
+```bash
+python3 scripts/fetch.py convnext                              # веса ConvNeXt-B + UPerNet -> checkpoints/ (466 МБ)
+bash env/fetch_vendor.sh                                       # официальный код DINOv3 -> vendor/dinov3
+PYTHONPATH=. ~/py311/bin/python tools/test.py configs/france/dinov3-convnext-b_upernet_1xb2-amp_france-1024x1024.py \
+    checkpoints/convnext_b_upernet_france_ep43.pth --work-dir work_dirs/test_cnx  # mIoU 75,30 %
+```
+Обучение SegFormer-B0 с нуля, как в эксперименте:
 ```bash
 python3 scripts/fetch.py init                                   # кодировщик MiT-B0, предобученный на LoveDA
 PYTHONPATH=. ~/py311/bin/python tools/train.py configs/france/segformer_mit-b0_1xb8-amp_france-1024x1024.py \
     --work-dir work_dirs/segformer_b0_france
 ```
-Подробнее о конфигурации — `configs/france/README_RU.md`. `tools/train.py` и `tools/test.py` — штатные скрипты MMSegmentation v1.2.2 без изменений.
+Обучение ConvNeXt-B + UPerNet и подробности о конфигурациях — в `configs/france/README_RU.md`. `tools/train.py` и `tools/test.py` — штатные скрипты MMSegmentation v1.2.2 без изменений.
 
 ## Набор данных
 16 фрагментов ортофотоснимков (RGB GeoTIFF, около 12 600 × 9 400 пикселей, 0,2 м) с разметкой IGN CoSIA в трёх поднаборах: City (5 фрагментов), Village (7) и Other (4), всего 1,9 млрд пикселей. Набор лежит в публичной папке Яндекс Диска https://disk.yandex.ru/d/k1HfK1f8eh27Yw. `scripts/fetch.py dataset` скачивает его по прямым ссылкам без учётной записи и сверяет каждый файл с контрольной суммой SHA-256 из `env/assets.json`.
@@ -60,17 +67,21 @@ PYTHONPATH=. ~/py311/bin/python tools/train.py configs/france/segformer_mit-b0_1
 | Файл | Назначение |
 |---|---|
 | `segformer_b0_france_ep76.pth` | обученная модель (чекпойнт MMSegmentation 1.2.2, эпоха 76) |
-| `mit_b0_loveda_encoder.pth` | кодировщик MiT-B0, предобученный на LoveDA: начальные веса для обучения |
+| `convnext_b_upernet_france_ep43.pth` | DINOv3 ConvNeXt-B + UPerNet (чекпойнт MMSegmentation 1.2.2, эпоха 43) |
+| `mit_b0_loveda_encoder.pth` | кодировщик MiT-B0, предобученный на LoveDA: начальные веса для обучения SegFormer-B0 |
 | `mmcv-2.1.0-cp311-cp311-manylinux1_x86_64.whl` | официальная сборка MMCV 2.1.0 OpenMMLab для torch 2.1 / CUDA 12.1 |
 | `mmcv-2.1.0-cp311-cp311-win_amd64.whl` | сборка MMCV 2.1.0 с CUDA-операциями для Windows (torch 2.1 / CUDA 12.1) |
+| `LICENSE_DINOv3.md` | лицензия DINOv3 (для весов ConvNeXt-B + UPerNet) |
 
 Контрольные суммы — в `env/assets.json`, `scripts/fetch.py` проверяет каждый скачанный файл.
 
 ## Модель
 SegFormer-B0 (кодировщик MiT-B0 и MLP-декодер), 3,7 млн параметров, 14 классов, патчи 1024 × 1024, лучшая эпоха 76 из 100. Валидационные фрагменты: mIoU 72,9 %, F1 83,6 %, общая точность 88,6 %, κ = 0,860. По поднаборам общая точность 90,3 % (City), 87,9 % (Village) и 88,2 % (Other). Подробнее — `MODEL_CARD_RU.md`.
 
+Вторая модель, DINOv3 ConvNeXt-B + UPerNet (кодировщик DINOv3 ConvNeXt-B, предобученный на LVD-1689M, декодер UPerNet), 122 млн параметров, обучена на том же наборе с исходных весов DINOv3, лучшая эпоха 43 из 55. Валидационные фрагменты: mIoU 75,3 %, F1 85,2 %, общая точность 90,3 %, κ = 0,880. Она точнее SegFormer-B0 на 2,4 п. п. mIoU, но обрабатывает фрагмент примерно в 2,7 раза медленнее. Для неё есть конфигурация MMSegmentation и веса в релизе, а блокнот Colab и автономные скрипты работают с SegFormer-B0.
+
 ## Данные и лицензии
-Классификация и разметка CoSIA (Couverture du Sol par Intelligence Artificielle) и ортофотоснимки подготовлены национальным институтом географической и лесной информации Франции (IGN) и распространяются им по открытой лицензии Etalab 2.0. Кодировщик предобучен на наборе LoveDA (J. Wang et al., *LoveDA: A Remote Sensing Land-Cover Dataset for Domain Adaptive Semantic Segmentation*, NeurIPS 2021). Модель SegFormer: E. Xie et al., *SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers*, NeurIPS 2021.
+Классификация и разметка CoSIA (Couverture du Sol par Intelligence Artificielle) и ортофотоснимки подготовлены национальным институтом географической и лесной информации Франции (IGN) и распространяются им по открытой лицензии Etalab 2.0. Кодировщик предобучен на наборе LoveDA (J. Wang et al., *LoveDA: A Remote Sensing Land-Cover Dataset for Domain Adaptive Semantic Segmentation*, NeurIPS 2021). Модель SegFormer: E. Xie et al., *SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers*, NeurIPS 2021. Кодировщик второй модели получен из DINOv3 (O. Siméoni et al., *DINOv3*, arXiv:2508.10104, код https://github.com/facebookresearch/dinov3), её веса распространяются на условиях DINOv3 License (`LICENSE_DINOv3.md`). UPerNet: T. Xiao et al., ECCV 2018, ConvNeXt: Z. Liu et al., CVPR 2022.
 
 ## Состав
-`configs/france/` конфигурации MMSegmentation · `france_mmseg/` модули проекта (потоковый скользящий инференс, повороты и отражения, управление скоростью обучения) · `tools/` штатные `train.py` и `test.py` MMSegmentation · `scripts/` загрузка файлов (`fetch.py`), подготовка набора France и своих данных, распознавание своих снимков · `env/` установка и проверка окружения, файлы релиза (`assets.json`) · `splits/` разбиение и таблица классов · `France_SegFormer_B0.ipynb` блокнот Colab · `START_WINDOWS.bat`, `START_LINUX.sh` автономная проверка на своём компьютере.
+`configs/france/` конфигурации MMSegmentation · `france_mmseg/` модули проекта (потоковый скользящий инференс, повороты и отражения, управление скоростью обучения, кодировщик DINOv3 ConvNeXt) · `tools/` штатные `train.py` и `test.py` MMSegmentation · `scripts/` загрузка файлов (`fetch.py`), подготовка набора France и своих данных, начальные веса DINOv3, распознавание своих снимков · `env/` установка и проверка окружения, загрузка кода DINOv3 (`fetch_vendor.sh`), файлы релиза (`assets.json`) · `splits/` разбиение и таблица классов · `France_SegFormer_B0.ipynb` блокнот Colab · `START_WINDOWS.bat`, `START_LINUX.sh` автономная проверка на своём компьютере.

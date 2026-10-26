@@ -8,6 +8,7 @@ PlateauControlHook   for iteration-based training (mmengine's ReduceOnPlateau su
                      (iii) stops training after `stop_patience` validations without improvement.
                      Validations before `start_iter` (warm-up) are not counted. Its state is stored in checkpoints,
                      so a resumed run continues the same counters; the LRs themselves are restored with the optimizer.
+SpeedOptionsHook     channels_last memory format / TF32 for the whole run (ConvNeXt-B + UPerNet config).
 Best checkpoints are saved by mmengine CheckpointHook(save_best=...).
 """
 import json
@@ -110,3 +111,21 @@ class PlateauControlHook(Hook):
         state = checkpoint.get('meta', {}).get('plateau_control')
         if state:
             self.state.update(state)
+
+
+@HOOKS.register_module()
+class SpeedOptionsHook(Hook):
+    """Speed options measured by tools/profile_train_step.py, set before anything runs:
+    channels_last: convolution weights in NHWC (cuDNN tensor-core kernels; the maths is unchanged);
+    tf32: TF32 tensor cores for the fp32 matmuls/convolutions that remain outside autocast."""
+    priority = 'VERY_HIGH'
+
+    def __init__(self, channels_last=False, tf32=False):
+        self.channels_last, self.tf32 = channels_last, tf32
+
+    def before_run(self, runner):
+        if self.tf32:                              # otherwise PyTorch defaults (matmul fp32, cuDNN convolutions TF32)
+            torch.backends.cuda.matmul.allow_tf32 = torch.backends.cudnn.allow_tf32 = True
+        if self.channels_last:
+            runner.model.to(memory_format=torch.channels_last)
+        runner.logger.info(f'[speed] channels_last={self.channels_last} tf32={self.tf32}')

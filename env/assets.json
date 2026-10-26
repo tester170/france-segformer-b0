@@ -8,6 +8,12 @@
    "size": 14961078,
    "sha256": "fb2877afba7f6ec3561798d4248430e544a270abe8efceda76572715443739f4"
   },
+  "convnext": {
+   "name": "convnext_b_upernet_france_ep43.pth",
+   "dir": "checkpoints",
+   "size": 488214974,
+   "sha256": "696b07c624d6b05d5a7a4b1d6eb060b5e20a0887fc58c0d80e5451c14df9e28f"
+  },
   "init": {
    "name": "mit_b0_loveda_encoder.pth",
    "dir": "checkpoints",

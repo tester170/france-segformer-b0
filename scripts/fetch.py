@@ -1,6 +1,7 @@
 """Downloads the files of the project and verifies their SHA-256 (standard library only).
 
   model    trained SegFormer-B0 (best epoch 76)          -> checkpoints/segformer_b0_france_ep76.pth
+  convnext trained DINOv3 ConvNeXt-B + UPerNet (epoch 43) -> checkpoints/convnext_b_upernet_france_ep43.pth
   init     MiT-B0 encoder pretrained on LoveDA (training) -> checkpoints/mit_b0_loveda_encoder.pth
   mmcv     MMCV 2.1.0 wheel for torch 2.1 / CUDA 12.1 / Python 3.11 (Linux; --windows for the Windows build)
   dataset  the France dataset from its public Yandex Disk folder -> <out>/{City,Village,Other}/*.tif
@@ -11,7 +12,7 @@ against its SHA-256. Files already present with the right checksum are not downl
 Every file is tried with a chain of methods: Python, curl, PowerShell (Windows) or wget (Linux), each with retries on
 network errors. If no secure connection can be established (a network that substitutes certificates: corporate
 proxy, antivirus), the download is repeated without certificate verification; the SHA-256 check still protects it.
-Usage: python scripts/fetch.py model|init|mmcv [--windows] [--out FILE] | python scripts/fetch.py dataset --out DIR"""
+Usage: python scripts/fetch.py model|convnext|init|mmcv [--windows] [--out FILE] | python scripts/fetch.py dataset --out DIR"""
 import argparse
 import hashlib
 import json
@@ -205,8 +206,8 @@ def dataset(out):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('what', choices=('model', 'init', 'mmcv', 'dataset'))
-    ap.add_argument('--out', help='target file (model, init, mmcv) or folder for the dataset')
+    ap.add_argument('what', choices=('model', 'convnext', 'init', 'mmcv', 'dataset'))
+    ap.add_argument('--out', help='target file (model, convnext, init, mmcv) or folder for the dataset')
     ap.add_argument('--windows', action='store_true', help='mmcv: the Windows build (win_amd64)')
     a = ap.parse_args()
     if a.what == 'dataset':
