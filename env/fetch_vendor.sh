@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Original DINOv3 code (github.com/facebookresearch/dinov3) at the commit of the experiment, into vendor/dinov3.
-# Needed only for the ConvNeXt-B + UPerNet config (DINOv3 ConvNeXt backbone); SegFormer-B0 does not use it.
+# Needed for the ConvNeXt-B + UPerNet and ViT-L + UPerNet configs (DINOv3 backbones); SegFormer-B0 does not use it.
 # Fetched at exactly that commit (git fetch by hash). Idempotent. Usage: bash env/fetch_vendor.sh
 set -euo pipefail
 BUNDLE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
