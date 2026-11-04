@@ -19,7 +19,7 @@ REM сертификата; веса, MMCV и набор данных при э�
 set "REPO=tester170/france-segformer-b0"
 set "TAG=v1.0"
 set "CONFIG=configs/france/segformer_mit-b0_1xb8-amp_france-1024x1024.py"
-set "CKPT=checkpoints/segformer_b0_france_ep76.pth"
+set "CKPT=checkpoints/segformer_b0_france_ext96.pth"
 set "MMCV_WHEEL=mmcv-2.1.0-cp311-cp311-win_amd64.whl"
 set "TORCH_INDEX=https://download.pytorch.org/whl/cu121"
 set "INDEXES=https://pypi.org/simple https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple https://repo.huaweicloud.com/repository/pypi/simple"
@@ -130,7 +130,7 @@ pushd code
 set "PYTHONPATH=%ROOT%\code"
 set "MPLBACKEND=Agg"
 "%PY%" tools\test.py %CONFIG% %CKPT% --work-dir work_dirs\test
-"%PY%" -c "import glob, json, sys; logs = sorted(glob.glob('work_dirs/test/*/*.json')); logs or sys.exit('ОШИБКА: tools/test.py не завершился'); m = json.loads(open(logs[-1]).read().strip().splitlines()[-1]); print('\nГОТОВО. mIoU %%.2f %%%% (ожидается 72.90), mDice %%.2f %%%%, OA %%.2f %%%%' %% (m['mIoU'], m['mDice'], m['aAcc']))"
+"%PY%" -c "import glob, json, sys; logs = sorted(glob.glob('work_dirs/test/*/*.json')); logs or sys.exit('ОШИБКА: tools/test.py не завершился'); m = json.loads(open(logs[-1]).read().strip().splitlines()[-1]); print('\nГОТОВО. mIoU %%.2f %%%% (ожидается 73.31), mDice %%.2f %%%%, OA %%.2f %%%%' %% (m['mIoU'], m['mDice'], m['aAcc']))"
 set "RC=%ERRORLEVEL%"
 popd
 if not "%RC%"=="0" goto FAIL

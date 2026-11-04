@@ -1,6 +1,9 @@
 # SegFormer-B0 (MiT-B0 + all-MLP head, 3.7 M parameters) on France (IGN CoSIA), 14 classes, City + Village + Other.
-# Result (report, best epoch 76 of 513 iterations = iteration 38988): val mIoU 72.90 %, kappa 0.860, OA 88.62 %.
-# Weights: segformer_b0_france_ep76.pth, release v1.0 of github.com/tester170/france-segformer-b0.
+# Result of this config on the 12 training fragments (report, best epoch 76 of 513 iterations = iteration 38988): val mIoU
+# 72.90 %, kappa 0.860, OA 88.62 % (weights segformer_b0_france_ep76.pth, release v1.0 of github.com/tester170/france-segformer-b0).
+# Released model segformer_b0_france_ext96.pth (same release): these weights fine-tuned for 2 epochs on 48 and 2 epochs on 96 fragments
+# (84 additional IGN CoSIA fragments of other regions of France, not part of the published dataset; AdamW 3e-5, warm-up
+# 500 iterations): val mIoU 73.31 %, kappa 0.869, OA 89.44 % (tools/test.py, fp32).
 # Recipe of the official MMSeg SegFormer Cityscapes 1024x1024 config (AdamW 6e-5, head LR x10, warm-up 1500 iterations),
 # encoder initialised from LoveDA (mit_b0_loveda_encoder.pth, same release), fp16 mixed precision, batch 8. After the
 # warm-up the LR is controlled by the validation mIoU instead of a fixed poly schedule (PlateauControlHook).

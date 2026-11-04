@@ -4,11 +4,11 @@
 
 | Конфигурация | Модель | Веса | mIoU (val, 14 классов) |
 |---|---|---|---|
-| `segformer_mit-b0_1xb8-amp_france-1024x1024.py` | SegFormer-B0 | `segformer_b0_france_ep76.pth` ([релиз](https://github.com/tester170/france-segformer-b0/releases/tag/v1.0)) | 72,90 |
+| `segformer_mit-b0_1xb8-amp_france-1024x1024.py` | SegFormer-B0 | `segformer_b0_france_ext96.pth` ([релиз](https://github.com/tester170/france-segformer-b0/releases/tag/v1.0)) | 73,31\* |
 | `dinov3-convnext-b_upernet_1xb2-amp_france-1024x1024.py` | DINOv3 ConvNeXt-B + UPerNet | `convnext_b_upernet_france_ep43.pth` (тот же релиз) | 75,30 |
-| `dinov3-vitl16-adapter_upernet_1xb2-amp_france-1024x1024.py` | DINOv3 ViT-L/16 + адаптер + UPerNet (собственная) | `vitl16_adapter_upernet_france.pth` (тот же релиз) | 80,35\* |
+| `dinov3-vitl16-adapter_upernet_1xb2-amp_france-1024x1024.py` | DINOv3 ViT-L/16 + адаптер + UPerNet (собрана автором) | `vitl16_adapter_upernet_france.pth` (тот же релиз) | 80,35\* |
 
-\* Веса ViT-L + UPerNet получены дообучением на 84 дополнительных фрагментах разметки IGN CoSIA из других регионов Франции, которые не входят в опубликованный набор (всего 96 фрагментов). После обучения по этой конфигурации на 12 фрагментах набора, то есть при тех же данных, что у двух других моделей, в эксперименте получено 78,67 %.
+\* Веса SegFormer-B0 и ViT-L + UPerNet получены дообучением на 84 дополнительных фрагментах разметки IGN CoSIA из других регионов Франции, которые не входят в опубликованный набор (всего 96 фрагментов). После обучения по этим конфигурациям на 12 фрагментах набора, то есть при тех же данных, что у ConvNeXt-B + UPerNet, в эксперименте получено 72,90 % (SegFormer-B0, веса `segformer_b0_france_ep76.pth` в том же релизе) и 78,67 % (ViT-L + UPerNet). SegFormer-B0 дообучен в том же порядке, что ViT-L + UPerNet на этапах расширения географии (две эпохи на 48 и две эпохи на 96 фрагментах); ViT-L + UPerNet после тех же этапов дал 79,3 %, его веса в релизе прошли ещё два этапа дообучения.
 
 Значения mIoU получены штатным `tools/test.py` с этими конфигурациями и весами и совпадают с отчётами. Все модели обучены только на данных France: ConvNeXt-B + UPerNet и ViT-L + UPerNet начинали с исходных весов DINOv3, а не с моделей, обученных на DLR SkyScapes.
 
@@ -18,6 +18,7 @@ bash env/setup_env.sh ~/py311                         # Python 3.11, PyTorch 2.1
 python3 scripts/fetch.py dataset --out data/France    # набор France с Яндекс Диска, проверка SHA-256
 ~/py311/bin/python scripts/prepare_data.py --src data/France --out data/france
 python3 scripts/fetch.py model                        # SegFormer-B0 -> checkpoints/
+python3 scripts/fetch.py model12                      # SegFormer-B0 после обучения на 12 фрагментах (эпоха 76) -> checkpoints/
 python3 scripts/fetch.py convnext                     # ConvNeXt-B + UPerNet -> checkpoints/ (466 МБ)
 python3 scripts/fetch.py vitl                         # ViT-L + UPerNet -> checkpoints/ (1,3 ГБ)
 bash env/fetch_vendor.sh                              # официальный код DINOv3 (для ConvNeXt-B и ViT-L) -> vendor/dinov3
@@ -27,7 +28,7 @@ bash env/fetch_vendor.sh                              # официальный �
 ## Оценка
 ```bash
 PYTHONPATH=. ~/py311/bin/python tools/test.py configs/france/segformer_mit-b0_1xb8-amp_france-1024x1024.py \
-    checkpoints/segformer_b0_france_ep76.pth
+    checkpoints/segformer_b0_france_ext96.pth
 PYTHONPATH=. ~/py311/bin/python tools/test.py configs/france/dinov3-convnext-b_upernet_1xb2-amp_france-1024x1024.py \
     checkpoints/convnext_b_upernet_france_ep43.pth
 PYTHONPATH=. ~/py311/bin/python tools/test.py configs/france/dinov3-vitl16-adapter_upernet_1xb2-amp_france-1024x1024.py \
@@ -54,7 +55,7 @@ PYTHONPATH=. ~/py311/bin/python tools/train.py configs/france/dinov3-vitl16-adap
 
 У всех моделей разогрев 1500 итераций, смешанная точность fp16 и одинаковые аугментации: масштаб 0,75–1,5, вырезка 1024 × 1024, мягкие изменения яркости, контраста, насыщенности и тона, повороты на 90° и отражения. Скорость обучения снижается вдвое после 5 проверок без роста mIoU, обучение останавливается после 12 таких проверок, лучшая модель сохраняется как `best_mIoU_iter_N.pth`.
 
-Отличие от эксперимента одно: патчи берутся штатно, случайными вырезками из плиток 2048 × 2048, тогда как в эксперименте каждая эпоха покрывала сетку обучающих фрагментов целиком и добавляла 25 % патчей на редких классах. Поэтому повторное обучение даст результат того же уровня, но не совпадающий до сотых. Дообучение ViT-L + UPerNet на дополнительных фрагментах в репозиторий не входит: эти фрагменты не опубликованы в наборе.
+Отличие от эксперимента одно: патчи берутся штатно, случайными вырезками из плиток 2048 × 2048, тогда как в эксперименте каждая эпоха покрывала сетку обучающих фрагментов целиком и добавляла 25 % патчей на редких классах. Поэтому повторное обучение даст результат того же уровня, но не совпадающий до сотых. Дообучение SegFormer-B0 и ViT-L + UPerNet на дополнительных фрагментах в репозиторий не входит: эти фрагменты не опубликованы в наборе.
 
 ## Состав
 * `_base_/datasets/france_cosia.py` — набор France в структуре `prepare_data.py`, 14 классов и палитра CoSIA, конвейеры обучения и оценки, метрика.

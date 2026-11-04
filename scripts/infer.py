@@ -34,7 +34,7 @@ def main():
     ap.add_argument('--input', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--config', default=str(BUNDLE / 'configs/france/segformer_mit-b0_1xb8-amp_france-1024x1024.py'))
-    ap.add_argument('--checkpoint', default=str(BUNDLE / 'checkpoints/segformer_b0_france_ep76.pth'))
+    ap.add_argument('--checkpoint', default=str(BUNDLE / 'checkpoints/segformer_b0_france_ext96.pth'))
     ap.add_argument('--fp16', action='store_true', help='half-precision inference (GPU only)')
     ap.add_argument('--overlay', action='store_true')
     ap.add_argument('--bands', nargs=3, type=int, default=[1, 2, 3], help='band numbers of R G B (default 1 2 3)')

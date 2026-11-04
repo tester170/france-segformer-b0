@@ -3,6 +3,12 @@
  "tag": "v1.0",
  "release": {
   "model": {
+   "name": "segformer_b0_france_ext96.pth",
+   "dir": "checkpoints",
+   "size": 14961466,
+   "sha256": "029af8fb8f314a0c49ed2425abbdf97aff62c148556117009567b52c4847f2df"
+  },
+  "model12": {
    "name": "segformer_b0_france_ep76.pth",
    "dir": "checkpoints",
    "size": 14961078,

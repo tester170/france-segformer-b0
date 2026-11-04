@@ -19,7 +19,7 @@ ROOT="$PWD"
 REPO=tester170/france-segformer-b0
 TAG=v1.0
 CONFIG=configs/france/segformer_mit-b0_1xb8-amp_france-1024x1024.py
-CKPT=checkpoints/segformer_b0_france_ep76.pth
+CKPT=checkpoints/segformer_b0_france_ext96.pth
 TORCH_INDEX=https://download.pytorch.org/whl/cu121
 INDEXES="https://pypi.org/simple https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple https://repo.huaweicloud.com/repository/pypi/simple"
 INSECURE_HOSTS="pypi.org files.pythonhosted.org download.pytorch.org download-r2.pytorch.org mirrors.tuna.tsinghua.edu.cn repo.huaweicloud.com github.com objects.githubusercontent.com release-assets.githubusercontent.com"
@@ -157,7 +157,7 @@ logs = sorted(glob.glob('work_dirs/test/*/*.json'))
 if not logs:
     raise SystemExit('\nОШИБКА: tools/test.py не завершился, подробности в test.log')
 m = json.loads(open(logs[-1]).read().strip().splitlines()[-1])
-print(f"\nГОТОВО. mIoU {m['mIoU']:.2f} % (ожидается 72.90), mDice {m['mDice']:.2f} %, OA {m['aAcc']:.2f} %")
+print(f"\nГОТОВО. mIoU {m['mIoU']:.2f} % (ожидается 73.31), mDice {m['mDice']:.2f} %, OA {m['aAcc']:.2f} %")
 EOF
 exit 0
 # код загрузчика (извлекается в .runtime/helper.py, bash его не выполняет)
